@@ -14,10 +14,36 @@ public class Escalonador{
 			criaProcessos();
 			leQuantum();
 			while(!estaVazia()){ /* enquanto houver processos na tabela de processos */
+				decrementaBloqueados(); /* decrementa o contador da fila dos bloqueados */
 				executando = pronto.pop(); /* obtem o proximo a executar */
 				executando.status = "Executando";
 				if(executando == null){
-					
+					continue;
+				}
+				for(int c = 0; c < quantum; c++){ /* operacoes que o processo tem direito */
+					String instrucao = executando.DS[executando.PC];
+					executando.PC++;
+					switch(instrucao){
+						case "COM": break;
+						case "E/S":
+							executando.status = "Bloqueado";
+							bloqueado.push(executando);
+							c = quantum;
+							break;
+						case "SAIDA":
+							finalizaProcesso(executando); /* remove processo da fila de bloqueados */
+							c = quantum;
+							break;
+						default:
+							switch(instrucao.substring(1,1)){
+								case "X":
+									executando.X = Integer.parseInt(instrucao.substring(3));
+									break;
+								case "Y":
+									executando.Y = Integer.parseInt(instrucao.substring(3));
+									break;
+							}
+					}
 				}
 			}
 		}
@@ -44,11 +70,25 @@ public class Escalonador{
 		quantum = sc.nextInt();
 	}
 	
-	/* Verifica se a tabela de processos esta vazia */
+	/* verifica se a tabela de processos esta vazia */
 	static boolean estaVazia(){
 		for(int i = 0; i < 10; i++)
 			if(tabela[i] != null) return false;
 		return true;
+	}
+	
+	/* decrementa o contador da fila de bloqueados. 
+	se algum processo tiver, ao final do procedimento, cont == 0, ele eh adicionado a fila de prontos. */
+	static void decrementaBloqueados(){
+		/* ALGUMA COISA */
+	}
+
+	/* remove processo da fila de processos, obtendo estatisticas */
+	static void finalizaProcesso(Processo p){
+		for(int i = 0; i < 10; i++)
+			if(tabela[i] == p) /* comparacao de ponteiros */
+				tabela[i] = null;
+		/* OBTEM ESTATISTICAS */ 
 	}
 
 }
