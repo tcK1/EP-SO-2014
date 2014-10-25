@@ -77,10 +77,18 @@ public class Escalonador{
 		return true;
 	}
 	
-	/* decrementa o contador da fila de bloqueados. 
-	se algum processo tiver, ao final do procedimento, cont == 0, ele eh adicionado a fila de prontos. */
+	/* decrementa o contador da fila de bloqueados
+	se algum processo tiver, ao final do procedimento, cont == 0, ele eh adicionado a fila de prontos */
 	static void decrementaBloqueados(){
-		/* ALGUMA COISA */
+		for(No n = pronto.inicio; n != null; n = n.prox) n.indice--;
+		No n = pronto.inicio;
+		while(n.indice == 0){ /* os mais antigos da fila de bloqueados esta sempre no inicio*/
+			Processo p = n.src;
+			p.status = "Pronto";
+			pronto.push(p);
+			pronto.inicio = n.prox;
+			n = n.prox;
+		}
 	}
 
 	/* remove processo da fila de processos, obtendo estatisticas */
@@ -150,7 +158,7 @@ class No{
 
 	public Processo src;
 	public No prox;
-	private int indice = Escalonador.quantum;
+	private int indice = 3; /* desbloqueia depois de outros dois processos*/
 	
 	No(Processo p){
 		src = p;
