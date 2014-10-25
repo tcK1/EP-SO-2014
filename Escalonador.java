@@ -20,11 +20,17 @@ public class Escalonador{
 				if(executando == null){
 					continue;
 				}
+				boolean paraPronto = true;
 				for(int c = 0; c < quantum; c++){ /* operacoes que o processo tem direito */
 					String instrucao = executando.DS[executando.PC];
 					executando.PC++;
 					switch(instrucao){
-						case "COM": break;
+							case "COM": 
+							if(quantum - c == 1){ /* depois da ultima iteracao, inserir na fila de prontos */
+								executando.status = "Pronto";
+								pronto.push(executando);	
+							}
+							break;
 						case "E/S":
 							executando.status = "Bloqueado";
 							bloqueado.push(executando);
@@ -38,9 +44,17 @@ public class Escalonador{
 							switch(instrucao.substring(1,1)){
 								case "X":
 									executando.X = Integer.parseInt(instrucao.substring(3));
+									if(quantum - c == 1){ /* depois da ultima iteracao, inserir na fila de prontos */
+										executando.status = "Pronto";
+										pronto.push(executando);	
+									}
 									break;
 								case "Y":
 									executando.Y = Integer.parseInt(instrucao.substring(3));
+									if(quantum - c == 1){ /* depois da ultima iteracao, inserir na fila de prontos */
+										executando.status = "Pronto";
+										pronto.push(executando);	
+									}
 									break;
 							}
 					}
