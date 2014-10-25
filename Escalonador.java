@@ -172,7 +172,7 @@ class No{
 
 	public Processo src;
 	public No prox;
-	private int indice = 3; /* desbloqueia depois de outros dois processos*/
+	public int indice = 3; /* desbloqueia depois de outros dois processos*/
 	
 	No(Processo p){
 		src = p;
