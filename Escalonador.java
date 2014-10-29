@@ -12,26 +12,27 @@ public class Escalonador{
 	public static void main(String[] args){
 		try{
 			
-			String diretorio = System.getProperty("user.dir");
+			String diretorioAtual = System.getProperty("user.dir");
 			int mediaTrocas = 0;
 			int mediaInstrucoes = 0;
 			
 			leQuantum();
 					
-			File log = new File( diretorio + "/log"+quantum+".txt" );/* instancia novo documento de texto para o log */
+			File log = new File( diretorioAtual + "/log"+quantum+".txt" );/* instancia novo documento de texto para o log */
 			if(!log.exists()) log.createNewFile(); /* caso este nao exista, um novo e criado */
 			
 			criaProcessos(log);
-			
-			FileWriter olog = new FileWriter(log.getPath(), true);
-			BufferedWriter wlog = new BufferedWriter(olog);
-			PrintWriter pw = new PrintWriter(wlog);
 			
 			while(!tabelaDeProcessosEstaVazia()) /* enquanto houver processos na tabela de processos */
 			{ 
 				decrementaBloqueados(); /* decrementa o contador da fila dos bloqueados */
 				executando = pronto.pop(); /* obtem o proximo a executar */
 				executando.status = "Executando";
+				
+				FileWriter olog = new FileWriter(log.getPath(), true);
+				BufferedWriter wlog = new BufferedWriter(olog);
+				PrintWriter pw = new PrintWriter(wlog);
+				
 				if(executando == null)
 				{
 					continue;
@@ -46,11 +47,13 @@ public class Escalonador{
 								executando.status = "Pronto";
 								pronto.push(executando);
 								pw.println("Interrompendo "+executando.nome+" apos "+quantum+" operacoes");
+								pw.close();
 //								wlog.write("Interrompendo "+executando.nome+" apos "+quantum+" operacoes");
 //								wlog.newLine();
 								break;
 							}
 							pw.println("Executando "+ executando.nome);
+							pw.close();
 //							wlog.write("Executando "+ executando.nome);
 //							wlog.newLine();
 							break;
@@ -60,16 +63,19 @@ public class Escalonador{
 							c = quantum;
 							if(c == 0){
 								pw.println("Interrompendo "+executando.nome+" apos 0 instrucao (havia apenas a E/S)");
+								pw.close();
 //								wlog.write("Interrompendo "+executando.nome+" apos 0 instrucao (havia apenas a E/S)");
 //								wlog.newLine();
 							}
 							if(c == 1){
 								pw.println("Interrompendo "+executando.nome+" apos 1 instrucao (havia um comando antes da E/S)");
+								pw.close();
 //								wlog.write("Interrompendo "+executando.nome+" apos 1 instrucao (havia um comando antes da E/S)");
 //								wlog.newLine();
 							}
 							if(c >= 2){
 								pw.println("Interrompendo "+executando.nome+" apos "+c+" instrucoes (haviam "+c+" comandos antes da E/S)");
+								pw.close();
 //								wlog.newLine();
 							}
 							break;
@@ -88,6 +94,7 @@ public class Escalonador{
 										pronto.push(executando);	
 									}
 									pw.println("Executando " + executando.nome);
+									pw.close();
 									break;
 								case "Y":
 									executando.Y = Integer.parseInt(instrucao.substring(2));
@@ -96,6 +103,7 @@ public class Escalonador{
 										pronto.push(executando);	
 									}
 									pw.println("Executando " + executando.nome);
+									pw.close();
 //									wlog.newLine();
 									break;
 							}
@@ -104,6 +112,10 @@ public class Escalonador{
 					mediaTrocas++;
 				}
 			}
+			
+			FileWriter olog = new FileWriter(log.getPath(), true);
+			BufferedWriter wlog = new BufferedWriter(olog);
+			PrintWriter pw = new PrintWriter(wlog);
 
 			pw.println("MEDIA DE TROCAS: "+(mediaTrocas/10));
 			pw.println("MEDIA DE INSTRUCOES: "+(mediaInstrucoes/10));
@@ -139,8 +151,6 @@ public class Escalonador{
 			PrintWriter pw = new PrintWriter(wlog);
 			pw.println("Carregando "+p.nome);
 			pw.close();
-			wlog.close();
-			olog.close();
 		}
 	}
 	
