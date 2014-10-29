@@ -5,7 +5,7 @@ public class Escalonador{
 
 	static Processo tabela[] = new Processo[10]; /* tabela de procesos */
 	static int quantum;
-	static Processo executando = null;
+	static Processo executando = 1;
 	static Fila pronto = new Fila();
 	static Fila bloqueado = new Fila();
 	
