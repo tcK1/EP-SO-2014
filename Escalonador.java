@@ -11,8 +11,20 @@ public class Escalonador{
 	
 	public static void main(String[] args){
 		try{
-			criaProcessos();
+			
+			int mediaTrocas = 0;
+			int mediaInstrucoes = 0;
+			
 			leQuantum();
+			
+			File log = new File( "/log"+quantum+".txt" );/* instancia novo documento de texto para o log */
+			if(!log.exists()) log.createNewFile(); /* caso este nao exista, um novo e criado */
+			
+			criaProcessos(log);
+			
+			FileWriter olog = new FileWriter(log);
+			BufferedWriter wlog = new BufferedWriter(olog);
+			
 			while(!estaVazia()){ /* enquanto houver processos na tabela de processos */
 				decrementaBloqueados(); /* decrementa o contador da fila dos bloqueados */
 				executando = pronto.pop(); /* obtem o proximo a executar */
@@ -25,20 +37,40 @@ public class Escalonador{
 					String instrucao = executando.DS[executando.PC];
 					executando.PC++;
 					switch(instrucao){
-							case "COM": 
+						case "COM": 
 							if(quantum - c == 1){ /* depois da ultima iteracao, inserir na fila de prontos */
 								executando.status = "Pronto";
-								pronto.push(executando);	
+								pronto.push(executando);
+								
+								wlog.write("Interrompendo "+executando.nome+" apos "+quantum+" operacoes");
+								wlog.newLine();
+								break;
 							}
+							wlog.write("Executando "+ executando.nome);
+							wlog.newLine();
 							break;
 						case "E/S":
 							executando.status = "Bloqueado";
 							bloqueado.push(executando);
 							c = quantum;
+							if(c == 0){
+								wlog.write("Interrompendo "+executando.nome+" apos 0 instrucao (havia apenas a E/S)");
+								wlog.newLine();
+							}
+							if(c == 1){
+								wlog.write("Interrompendo "+executando.nome+" apos 1 instrucao (havia um comando antes da E/S)");
+								wlog.newLine();
+							}
+							if(c >= 2){
+								wlog.write("Interrompendo "+executando.nome+" apos "+c+" instrucoes (haviam "+c+" comandos antes da E/S)");
+								wlog.newLine();
+							}
 							break;
 						case "SAIDA":
 							finalizaProcesso(executando); /* remove processo da fila de bloqueados */
 							c = quantum;
+							wlog.write(executando.nome+" terminado. X="+executando.X+" Y="+executando.Y);
+							wlog.newLine();
 							break;
 						default:
 							switch(instrucao.substring(1,1)){
@@ -48,6 +80,8 @@ public class Escalonador{
 										executando.status = "Pronto";
 										pronto.push(executando);	
 									}
+									wlog.write("Executando " + executando.nome);
+									wlog.newLine();
 									break;
 								case "Y":
 									executando.Y = Integer.parseInt(instrucao.substring(3));
@@ -55,18 +89,30 @@ public class Escalonador{
 										executando.status = "Pronto";
 										pronto.push(executando);	
 									}
+									wlog.write("Executando " + executando.nome);
+									wlog.newLine();
 									break;
 							}
+						mediaInstrucoes++;
 					}
+					mediaTrocas++;
 				}
 			}
+			wlog.write("MEDIA DE TROCAS: "+(mediaTrocas/10));
+			wlog.newLine();
+			wlog.write("MEDIA DE INSTRUCOES: "+(mediaInstrucoes/10));
+			wlog.newLine();
+			wlog.write("QUANTUM: "+quantum);						
+			wlog.newLine();
+			wlog.close();
+			olog.close();
 		}
 		catch(IOException ioe){
 			System.out.println(ioe.getMessage());
 		}
 	}
 	
-	static void criaProcessos() throws IOException{
+	static void criaProcessos(File log) throws IOException{
 		FileReader fr;
 		Processo p;
 		for(int i = 1; i <= 10; i++){
@@ -75,6 +121,13 @@ public class Escalonador{
 			p = new Processo(fr); 
 			tabela[i - 1] = p;
 			pronto.push(p);
+			
+			FileWriter olog = new FileWriter(log);
+			BufferedWriter wlog = new BufferedWriter(olog);
+			wlog.write("Carregando "+p.nome);
+			wlog.newLine();
+			wlog.close();
+			olog.close();
 		}
 	}
 	
