@@ -154,6 +154,18 @@ public class Escalonador{
 		}
 	}
 	
+//	static int verificarTamanhoDaFila(Fila f)
+//	{
+//		int contador = 0;
+//		No corredor = f.inicio;
+//		while(corredor != null)
+//		{
+//			contador++;
+//			corredor = corredor.prox;
+//		}
+//		return contador;
+//	}
+	
 	static void leQuantum() throws IOException{
 		FileReader fr = new FileReader("processos/quantum.txt");
 		Scanner sc = new Scanner(fr);
@@ -225,13 +237,17 @@ class Fila{
 	
 	/* adiciona no a fila */
 	public void push(Processo p){
-		if(inicio == null){
+		if(inicio == null)
+		{
 			No n = new No(p);
 			inicio = n;
 			ultimo = n;
 		}
-		else{
-			ultimo.prox = new No(p);
+		else
+		{
+			No novoNo = new No(p);
+			ultimo.prox = novoNo;
+			ultimo = novoNo;
 		}
 	}
 	
