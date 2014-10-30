@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 public class Escalonador{
 
-	static Processo tabela[] = new Processo[10]; /* tabela de procesos */
+	static Processo tabela[] = new Processo[3]; /* tabela de procesos */ //@@@@@@@@@@@@MODIFICADO O NUMERO PROCESSOS NA TABELA
 	static int quantum;
 	static Processo executando = null;
 	static Fila pronto = new Fila();
@@ -27,18 +27,18 @@ public class Escalonador{
 			{ 
 				decrementaBloqueados(); /* decrementa o contador da fila dos bloqueados */
 				executando = pronto.pop(); /* obtem o proximo a executar */
-				executando.status = "Executando";
-				
-				FileWriter olog = new FileWriter(log.getPath(), true);
-				BufferedWriter wlog = new BufferedWriter(olog);
-				PrintWriter pw = new PrintWriter(wlog);
-				
+				executando.status = "Executando";			
 				if(executando == null)
 				{
 					continue;
 				}
 				boolean paraPronto = true;
-				for(int c = 0; c < quantum; c++){ /* operacoes que o processo tem direito */
+				for(int c = 0; c < quantum; c++)  /* operacoes que o processo tem direito */
+				{
+					FileWriter olog = new FileWriter(log.getPath(), true);
+					BufferedWriter wlog = new BufferedWriter(olog);
+					PrintWriter pw = new PrintWriter(wlog);
+					
 					String instrucao = executando.DS[executando.PC];
 					executando.PC++;
 					switch(instrucao){
@@ -139,7 +139,7 @@ public class Escalonador{
 	static void criaProcessos(File log) throws IOException{
 		FileReader fr;
 		Processo p;
-		for(int i = 1; i <= 10; i++){
+		for(int i = 1; i <= 3; i++){ //@@@@@@@@@@@@MODIFICADO O NUMERO DE LOOPS PARA LER APENAS 3 ARQUIVOS
 			if(i < 10) fr = new FileReader("processos/0" + i + ".txt");
 			else fr = new FileReader("processos/" + i + ".txt");
 			p = new Processo(fr); 
@@ -173,7 +173,7 @@ public class Escalonador{
 	}
 	
 	/* verifica se a tabela de processos esta vazia */
-	static boolean tabelaDeProcessosEstaVazia(){
+	static boolean tabelaDeProcessosEstaVazia(){//@@@@@@@@@@@@MODIFICADO O NUMERO DE LOOPS PARA LER APENAS 3 ESPAÇOS
 		for(int i = 0; i < 10; i++)
 			if(tabela[i] != null) return false;
 		return true;
@@ -183,20 +183,23 @@ public class Escalonador{
 	se algum processo tiver, ao final do procedimento, cont == 0, ele eh adicionado a fila de prontos */
 	static void decrementaBloqueados()
 	{
-		for(No n = pronto.inicio; n != null; n = n.prox) n.indice--;
-		No n = pronto.inicio;
-		while(n.indice == 0){ /* os mais antigos da fila de bloqueados esta sempre no inicio*/
-			Processo p = n.src;
-			p.status = "Pronto";
-			pronto.push(p);
-			pronto.inicio = n.prox;
-			n = n.prox;
+		if(bloqueado.inicio != null)
+		{
+			for(No n = bloqueado.inicio; n != null; n = n.prox) n.indice--;
+			No n = bloqueado.inicio;
+			while(n.indice == 0){ /* os mais antigos da fila de bloqueados esta sempre no inicio*/
+				Processo p = n.src;
+				p.status = "Pronto";
+				pronto.push(p);
+				pronto.inicio = n.prox;
+				n = n.prox;
+			}
 		}
 	}
 
 	/* remove processo da fila de processos, obtendo estatisticas */
-	static void finalizaProcesso(Processo p){
-		for(int i = 0; i < 10; i++)
+	static void finalizaProcesso(Processo p){//@@@@@@@@@@@@MODIFICADO O NUMERO DE LOOPS PARA FINALIZAR APENAS 3
+		for(int i = 0; i < 3; i++)
 			if(tabela[i] == p) /* comparacao de ponteiros */
 				tabela[i] = null;
 		/* OBTEM ESTATISTICAS */ 
