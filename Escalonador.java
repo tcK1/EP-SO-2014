@@ -26,13 +26,13 @@ public class Escalonador{
 			while(!tabelaDeProcessosEstaVazia()) /* enquanto houver processos na tabela de processos */
 			{ 
 				decrementaBloqueados(); /* decrementa o contador da fila dos bloqueados */
-				executando = pronto.pop(); /* obtem o proximo a executar */
-				executando.status = "Executando";			
+				executando = pronto.pop(); /* obtem o proximo a executar */	
 				if(executando == null)
 				{
 					continue;
 				}
-				boolean paraPronto = true;
+				executando.status = "Executando";		
+
 				for(int c = 0; c < quantum; c++)  /* operacoes que o processo tem direito */
 				{
 					FileWriter olog = new FileWriter(log.getPath(), true);
@@ -84,6 +84,7 @@ public class Escalonador{
 							finalizaProcesso(executando); /* remove processo da fila de bloqueados */
 							c = quantum;
 							pw.println(executando.nome+" terminado. X="+executando.X+" Y="+executando.Y);
+							pw.close();
 //							wlog.newLine();
 							break;
 						default:
@@ -155,18 +156,6 @@ public class Escalonador{
 		}
 	}
 	
-//	static int verificarTamanhoDaFila(Fila f)
-//	{
-//		int contador = 0;
-//		No corredor = f.inicio;
-//		while(corredor != null)
-//		{
-//			contador++;
-//			corredor = corredor.prox;
-//		}
-//		return contador;
-//	}
-	
 	static void leQuantum() throws IOException{
 		FileReader fr = new FileReader("processos/quantum.txt");
 		Scanner sc = new Scanner(fr);
@@ -175,7 +164,7 @@ public class Escalonador{
 	
 	/* verifica se a tabela de processos esta vazia */
 	static boolean tabelaDeProcessosEstaVazia(){//@@@@@@@@@@@@MODIFICADO O NUMERO DE LOOPS PARA LER APENAS 3 ESPAÇOS
-		for(int i = 0; i < 10; i++)
+		for(int i = 0; i < 3; i++)
 			if(tabela[i] != null) return false;
 		return true;
 	}
@@ -256,11 +245,16 @@ class Fila{
 	}
 	
 	/* remove no da fila, retornando o respectivo processo */
-	public Processo pop(){
-		No aux = inicio;
-		if(inicio != null) inicio = inicio.prox;
-		else inicio = null;
-		return aux.src;	
+	public Processo pop()
+	{
+		if(inicio != null)
+		{
+			No aux = inicio;
+			if(inicio != null) inicio = inicio.prox;
+			else inicio = null;
+			return aux.src;	
+		}
+		return null;
 	}
 	
 }
