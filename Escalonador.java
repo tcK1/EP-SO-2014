@@ -60,21 +60,22 @@ public class Escalonador{
 						case "E/S":
 							executando.status = "Bloqueado";
 							bloqueado.push(executando);
+							int linhasPercorridas = c;
 							c = quantum;
-							if(c == 0){
+							if(linhasPercorridas == 0){
 								pw.println("Interrompendo "+executando.nome+" apos 0 instrucao (havia apenas a E/S)");
 								pw.close();
 //								wlog.write("Interrompendo "+executando.nome+" apos 0 instrucao (havia apenas a E/S)");
 //								wlog.newLine();
 							}
-							if(c == 1){
+							if(linhasPercorridas == 1){
 								pw.println("Interrompendo "+executando.nome+" apos 1 instrucao (havia um comando antes da E/S)");
 								pw.close();
 //								wlog.write("Interrompendo "+executando.nome+" apos 1 instrucao (havia um comando antes da E/S)");
 //								wlog.newLine();
 							}
-							if(c >= 2){
-								pw.println("Interrompendo "+executando.nome+" apos "+c+" instrucoes (haviam "+c+" comandos antes da E/S)");
+							if(linhasPercorridas >= 2){
+								pw.println("Interrompendo "+executando.nome+" apos "+linhasPercorridas+" instrucoes (haviam "+c+" comandos antes da E/S)");
 								pw.close();
 //								wlog.newLine();
 							}
@@ -187,11 +188,11 @@ public class Escalonador{
 		{
 			for(No n = bloqueado.inicio; n != null; n = n.prox) n.indice--;
 			No n = bloqueado.inicio;
-			while(n.indice == 0){ /* os mais antigos da fila de bloqueados esta sempre no inicio*/
+			while(n != null && n.indice == 0){ /* os mais antigos da fila de bloqueados esta sempre no inicio*/
 				Processo p = n.src;
 				p.status = "Pronto";
 				pronto.push(p);
-				pronto.inicio = n.prox;
+				bloqueado.inicio = n.prox;
 				n = n.prox;
 			}
 		}
