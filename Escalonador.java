@@ -73,21 +73,25 @@ public class Escalonador{
 							switch(instrucao.substring(0,1)){ /* primeiro caractere eh X ou Y */
 								case "X":
 									executando.X = Integer.parseInt(instrucao.substring(2));
-									if(quantum - c == 1){ /* depois da ultima iteracao, inserir na fila de prontos */
-										executando.status = "Pronto";
-										pronto.push(executando);	
-									}
 									pw.println("Executando " + executando.nome);
 									pw.close();
+									if(quantum - c == 1){ /* depois da ultima iteracao, inserir na fila de prontos */
+										executando.status = "Pronto";
+										pronto.push(executando);
+										pw.println("Interrompendo " + executando.nome + " após " + quantum + " instruções");
+										pw.close();	
+									}
 									break;
 								case "Y":
 									executando.Y = Integer.parseInt(instrucao.substring(2));
-									if(quantum - c == 1){ /* depois da ultima iteracao, inserir na fila de prontos */
-										executando.status = "Pronto";
-										pronto.push(executando);	
-									}
 									pw.println("Executando " + executando.nome);
 									pw.close();
+									if(quantum - c == 1){ /* depois da ultima iteracao, inserir na fila de prontos */
+										executando.status = "Pronto";
+										pronto.push(executando);
+										pw.println("Interrompendo " + executando.nome + " após " + quantum + " instruções");
+										pw.close();	
+									}
 									break;
 							}
 					}
