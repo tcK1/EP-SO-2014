@@ -95,8 +95,8 @@ public class Escalonador{
 			}
 			
 			PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(log.getPath(), true)));
-			float mediaTrocas = trocas / NUM_PROCESSOS;
-			float mediaInstrucoes = instrucoes / NUM_PROCESSOS;
+			float mediaTrocas = (float)trocas / (float)NUM_PROCESSOS;
+			float mediaInstrucoes = (float)instrucoes / (float)NUM_PROCESSOS;
 			pw.println("MEDIA DE TROCAS: " + mediaTrocas);
 			pw.println("MEDIA DE INSTRUCOES: " + mediaInstrucoes);
 			pw.println("QUANTUM: " + quantum);
@@ -164,69 +164,4 @@ public class Escalonador{
 				tabela[i] = null;
 	}
 
-}
-
-class Processo{
-
-	public String nome;
-	public String status = "Pronto";
-	public String DS[] = new String[21]; /* segmento de dados */
-	public int PC = 0; /* contador de programa */
-	public int X = 0;
-	public int Y = 0;
-	
-	Processo(FileReader fr){
-		Scanner sc = new Scanner(fr);
-		int i = 0;
-		nome = sc.nextLine();
-		while(sc.hasNextLine()){
-			DS[i] = sc.nextLine();
-			i++;
-		}
-	}
-	
-}
-
-class Fila{
-	
-	public No inicio;
-	private No ultimo;
-	
-	Fila(){
-		inicio = null;
-		ultimo = null;
-	}
-	
-	/* adiciona no a fila */
-	public void push(Processo p){
-		if(inicio == null){
-			No n = new No(p);
-			inicio = n;
-			ultimo = n;
-		}
-		else{
-			No n = new No(p);
-			ultimo.prox = n;
-			ultimo = n;
-		}
-	}
-	
-	/* remove no da fila, retornando o respectivo processo */
-	public Processo pop(){
-		if(inicio == null) return null;
-		No aux = inicio;
-		inicio = inicio.prox;
-		return aux.processo;
-	}
-}
-
-class No{
-	public Processo processo;
-	public No prox;
-	public int indice = 3; /* desbloqueia depois de outros dois processos*/
-	
-	No(Processo p){
-		processo = p;
-		prox = null;
-	}
 }
