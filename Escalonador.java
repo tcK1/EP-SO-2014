@@ -23,6 +23,7 @@ public class Escalonador{
 			while(!tabelaEstaVazia()){ /* enquanto houver processos na tabela de processos */
 				decrementaBloqueados(); /* decrementa o contador da fila dos bloqueados */
 				executando = pronto.pop(); /* obtem o proximo a executar */
+				trocas++;
 				if(executando == null) continue;
 				executando.status = "Executando";		
 				for(int c = 0; c < quantum; c++){  /* operacoes que o processo tem direito */
@@ -31,6 +32,7 @@ public class Escalonador{
 							new FileWriter(log.getPath(), true)));
 					String instrucao = executando.DS[executando.PC];
 					executando.PC++;
+					instrucoes++;
 					switch(instrucao){
 						case "COM": 
 							if(quantum - c == 1){ /* depois da ultima iteracao, inserir na fila de prontos */
@@ -88,15 +90,13 @@ public class Escalonador{
 									pw.close();
 									break;
 							}
-						instrucoes++;
 					}
-					trocas++;
 				}
 			}
 			
 			PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(log.getPath(), true)));
 			float mediaTrocas = (float)trocas / (float)NUM_PROCESSOS;
-			float mediaInstrucoes = (float)instrucoes / (float)NUM_PROCESSOS;
+			float mediaInstrucoes = (float)instrucoes / (float)trocas;
 			pw.println("MEDIA DE TROCAS: " + mediaTrocas);
 			pw.println("MEDIA DE INSTRUCOES: " + mediaInstrucoes);
 			pw.println("QUANTUM: " + quantum);
