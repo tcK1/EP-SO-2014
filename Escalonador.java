@@ -34,11 +34,11 @@ public class Escalonador{
 					executando.PC++;
 					instrucoes++;
 					switch(instrucao){
-						case "COM": 
+						case "COM":
 							if(c == 0){
 								pw.println("Executando " + executando.nome);
 								pw.close();
-							}
+							} 
 							if(quantum - c == 1){ /* depois da ultima iteracao, inserir na fila de prontos */
 								executando.status = "Pronto";
 								pronto.push(executando);
@@ -75,8 +75,10 @@ public class Escalonador{
 							switch(instrucao.substring(0,1)){ /* primeiro caractere eh X ou Y */
 								case "X":
 									executando.X = Integer.parseInt(instrucao.substring(2));
-									pw.println("Executando " + executando.nome);
-									pw.close();
+									if(c == 0){
+										pw.println("Executando " + executando.nome);
+										pw.close();
+									}
 									if(quantum - c == 1){ /* depois da ultima iteracao, inserir na fila de prontos */
 										executando.status = "Pronto";
 										pronto.push(executando);
@@ -86,8 +88,10 @@ public class Escalonador{
 									break;
 								case "Y":
 									executando.Y = Integer.parseInt(instrucao.substring(2));
-									pw.println("Executando " + executando.nome);
-									pw.close();
+									if(c == 0){
+										pw.println("Executando " + executando.nome);
+										pw.close();
+									}
 									if(quantum - c == 1){ /* depois da ultima iteracao, inserir na fila de prontos */
 										executando.status = "Pronto";
 										pronto.push(executando);
