@@ -38,7 +38,7 @@ public class Escalonador{
 							if(quantum - c == 1){ /* depois da ultima iteracao, inserir na fila de prontos */
 								executando.status = "Pronto";
 								pronto.push(executando);
-								pw.println("Interrompendo " + executando.nome + " apos " + quantum + " operacoes");
+								pw.println("Interrompendo " + executando.nome + " após " + quantum + " instruções");
 								pw.close();
 								break;
 							}
@@ -50,15 +50,15 @@ public class Escalonador{
 							bloqueado.push(executando);
 							/* c = numero de comandos executadores durante o quantum */
 							if(c == 0){
-								pw.println("Interrompendo " + executando.nome + " apos 0 instrucao (havia apenas a E/S)");
+								pw.println("Interrompendo " + executando.nome + " após 0 instrução (havia apenas a E/S)");
 								pw.close();
 							}
 							else if(c == 1){
-								pw.println("Interrompendo " + executando.nome + " apos 1 instrucao (havia um comando antes da E/S)");
+								pw.println("Interrompendo " + executando.nome + " após 1 instrução (havia um comando antes da E/S)");
 								pw.close();
 							}
 							else{
-								pw.println("Interrompendo " + executando.nome + " apos " + c + " instrucoes (haviam " + c + " comandos antes da E/S)");
+								pw.println("Interrompendo " + executando.nome + " após " + c + " instruções (haviam " + c + " comandos antes da E/S)");
 								pw.close();
 							}
 							c = quantum;
@@ -66,7 +66,7 @@ public class Escalonador{
 						case "SAIDA":
 							finalizaProcesso(executando); /* remove processo da fila de bloqueados */
 							c = quantum;
-							pw.println(executando.nome + " terminado. X=" + executando.X + " Y=" + executando.Y);
+							pw.println(executando.nome + " terminado. X=" + executando.X + ". Y=" + executando.Y);
 							pw.close();
 							break;
 						default:
