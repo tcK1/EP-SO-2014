@@ -35,8 +35,10 @@ public class Escalonador{
 					instrucoes++;
 					switch(instrucao){
 						case "COM": 
-							pw.println("Executando " + executando.nome);
-							pw.close();
+							if(c == 0){
+								pw.println("Executando " + executando.nome);
+								pw.close();
+							}
 							if(quantum - c == 1){ /* depois da ultima iteracao, inserir na fila de prontos */
 								executando.status = "Pronto";
 								pronto.push(executando);
