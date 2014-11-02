@@ -51,6 +51,8 @@ public class Escalonador{
 							executando.status = "Bloqueado";
 							bloqueado.push(executando);
 							/* c = numero de comandos executadores durante o quantum */
+							pw.println("E/S iniciada em " + executando.nome);
+							pw.close();
 							if(c == 0){
 								pw.println("Interrompendo " + executando.nome + " após 0 instrução (havia apenas a E/S)");
 								pw.close();
